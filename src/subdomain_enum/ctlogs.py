@@ -6,7 +6,7 @@ import urllib.request
 
 CTRSH_URL = "https://api.ctlogs.dev/v1/subdomains/{domain}"
 
-def fetch_crtsh(domain: str, timeout: float = 10.0) -> list[str]:
+def fetch_subdomains(domain: str, timeout: float = 10.0) -> list[str]:
     """Запрашивает crt.sh и возвращает список уникальных поддоменов"""
 
     url = CTRSH_URL.format(domain=domain)

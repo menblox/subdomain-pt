@@ -7,6 +7,7 @@ __pycache__/
 
 .vscode/
 .ruff_cache/
+subdomain_pt.egg-info/
 
 .env
 

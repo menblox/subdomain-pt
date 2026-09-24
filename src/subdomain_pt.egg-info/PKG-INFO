@@ -1,7 +1,0 @@
-Metadata-Version: 2.4
-Name: subdomain-pt
-Version: 0.1.0
-Summary: CLI  утилита  для  поиска  поддоменов
-Requires-Python: >=3.14
-Provides-Extra: dev
-Requires-Dist: ruff>=0.16.0; extra == "dev"

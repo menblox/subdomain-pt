@@ -1,10 +1,9 @@
 """пассивный поиск РФ поддоменов через Certificate Transparency."""
 
-import ssl
 import json
+import ssl
 import urllib.error
 import urllib.request
-
 
 CTRSH_URL = "https://ct.tlscc.ru/?q={domain}&output=json"
 

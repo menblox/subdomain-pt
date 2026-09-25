@@ -13,7 +13,11 @@ def _generate_random_name(lenght: int = RANDOM_NAME_LENGTH) -> str:
     albet = string.ascii_lowercase + string.digits
     return "".join(random.choices(albet, k=lenght))
 
-def detect_wildcard(domain: str, timeout: float = 2.0, quantity: int = DEFAULT_QUANTITY) -> set[str] | None:
+def detect_wildcard(
+        domain: str, 
+        timeout: float = 2.0, 
+        quantity: int = DEFAULT_QUANTITY
+    ) -> set[str] | None:
     """Определяет, есть ли у домена wildcard-запись"""
 
     results: list[list[str] | None] = []

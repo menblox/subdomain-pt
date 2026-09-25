@@ -1,4 +1,5 @@
 import sys
+
 sys.path.insert(0, "src")
 
 from subdomain_enum.ctlogs_ru import fetch_subdomains_ru

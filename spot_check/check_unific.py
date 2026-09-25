@@ -1,16 +1,31 @@
 import sys
+import time
+
 sys.path.insert(0, "src")
 
 from subdomain_enum.ctlogs import fetch_subdomains
+from subdomain_enum.wildcard import detect_wildcard
 from subdomain_enum.unification import unification_names
 
-names = fetch_subdomains("github.com")
-print(f"Имён из crt.sh: {len(names)}")
+domain = "yandex.ru"
 
-results = unification_names(names)
+names = fetch_subdomains(domain)
+print(f"Имён из ctlogs.dev: {len(names)}")
 
-for name, ip in results:
-    if ip:
-        print(f"{name}\t{', '.join(ip)}")
+wildcard_ip = detect_wildcard(domain)
+print(f"Wildcard: {wildcard_ip}")
+
+start = time.time()
+results = unification_names(names, wildcard_ip=wildcard_ip)
+elapsed = time.time() - start
+
+found = 0
+for name, ips in results:
+    if ips:
+        print(f"{name}\t{', '.join(ips)}")
+        found += 1
     else:
         print(f"{name}\tN/A")
+
+print(f"\nНайдено: {found} из {len(names)}")
+print(f"Время: {elapsed:.2f} сек")

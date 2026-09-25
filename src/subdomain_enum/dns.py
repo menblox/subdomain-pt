@@ -3,12 +3,14 @@
 import concurrent.futures
 import socket
 
+
 def resolve_domain(domain: str, timeout: float = 2.0) -> list[str]:
     """Резолвит домен в список уникальных IP-адресов (IPv4 + IPv6)"""
 
     # Запуск getaddrinfo в отдельном потоке, чтобы можно было прервать ожидание по таймауту#
     with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-        future = executor.submit(socket.getaddrinfo, domain, None)  #принимает: (socket.getaddrinfo, сам домен, порт(не указываем))
+        #принимает: (socket.getaddrinfo, сам домен, порт(не указываем))
+        future = executor.submit(socket.getaddrinfo, domain, None)
 
         try:
             results = future.result(timeout=timeout)

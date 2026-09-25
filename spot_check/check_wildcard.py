@@ -1,4 +1,5 @@
 import sys
+
 sys.path.insert(0, "src")
 
 from subdomain_enum.wildcard import detect_wildcard

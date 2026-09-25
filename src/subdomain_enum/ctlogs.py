@@ -18,14 +18,14 @@ def fetch_subdomains(domain: str, timeout: float = 10.0) -> list[str]:
             raw = response.read().decode("utf-8")
             #print("Raw: ", raw)
 
-    except (urllib.error.URLError, TimeoutError, OSError) as e:
+    except (urllib.error.URLError, TimeoutError, OSError):
         #print(e)
         return []
 
     try:
         data = json.loads(raw)
         #print("парсится")
-    except json.JSONDecodeError as e:
+    except json.JSONDecodeError:
         #print(e)
         return []
 

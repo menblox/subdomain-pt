@@ -2,7 +2,7 @@ import sys
 
 sys.path.insert(0, "src")
 
-from subdomain_enum.ctlogs_ru import fetch_subdomains_ru
+from subdomain_enum.infrastructure.ctlogs_ru import fetch_subdomains_ru
 
 names = fetch_subdomains_ru("yandex.ru", timeout=30)
 print(f"Найдено: {len(names)}")

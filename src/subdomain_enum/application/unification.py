@@ -3,7 +3,7 @@
 import concurrent.futures
 from functools import partial
 
-from subdomain_enum.dns import resolve_domain
+from subdomain_enum.infrastructure.dns import resolve_domain
 
 
 def unification_names(
@@ -12,7 +12,7 @@ def unification_names(
         max_workers: int = 30,
         wildcard_ip: set[str] | None = None
     ) -> list[tuple[str, list[str] | None]]:
-    """Резолвит список имён в IP-адреса параллельно"""
+    #Резолвит список имён в IP-адреса параллельно
 
     if not names:
         return []

@@ -3,9 +3,9 @@ import time
 
 sys.path.insert(0, "src")
 
-from subdomain_enum.ctlogs import fetch_subdomains
-from subdomain_enum.wildcard import detect_wildcard
-from subdomain_enum.unification import unification_names
+from subdomain_enum.application.unification import unification_names
+from subdomain_enum.application.wildcard import detect_wildcard
+from subdomain_enum.infrastructure.ctlogs import fetch_subdomains
 
 domain = "yandex.ru"
 

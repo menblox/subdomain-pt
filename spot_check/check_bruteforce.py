@@ -3,7 +3,7 @@ import time
 
 sys.path.insert(0, "src")
 
-from subdomain_enum.bruteforce import bruteforce, load_wordlist
+from subdomain_enum.application.bruteforce import bruteforce, load_wordlist
 
 words = load_wordlist("wordlists/subdomains-5000.txt")
 

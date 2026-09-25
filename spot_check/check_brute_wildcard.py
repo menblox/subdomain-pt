@@ -3,9 +3,8 @@ import time
 
 sys.path.insert(0, "src")
 
-from subdomain_enum.bruteforce import load_wordlist, bruteforce
-from subdomain_enum.wildcard import detect_wildcard
-
+from subdomain_enum.application.bruteforce import bruteforce, load_wordlist
+from subdomain_enum.application.wildcard import detect_wildcard
 
 domain = "github.com"
 words = load_wordlist("wordlists/subdomains-5000.txt")

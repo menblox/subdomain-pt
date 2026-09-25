@@ -7,7 +7,7 @@ import urllib.request
 CTRSH_URL = "https://api.ctlogs.dev/v1/subdomains/{domain}"
 
 def fetch_subdomains(domain: str, timeout: float = 10.0) -> list[str]:
-    """Запрашивает crt.sh и возвращает список уникальных поддоменов"""
+    #Запрашивает crt.sh и возвращает список уникальных поддоменов
 
     url = CTRSH_URL.format(domain=domain)
     print(url)
@@ -16,17 +16,13 @@ def fetch_subdomains(domain: str, timeout: float = 10.0) -> list[str]:
     try: 
         with urllib.request.urlopen(request, timeout=timeout) as response:
             raw = response.read().decode("utf-8")
-            #print("Raw: ", raw)
 
     except (urllib.error.URLError, TimeoutError, OSError):
-        #print(e)
         return []
 
     try:
         data = json.loads(raw)
-        #print("парсится")
     except json.JSONDecodeError:
-        #print(e)
         return []
 
     if not isinstance(data, dict):
@@ -40,12 +36,10 @@ def fetch_subdomains(domain: str, timeout: float = 10.0) -> list[str]:
 
     for row in rows:
         if not isinstance(row, dict):
-            #print("row не словарь")
             continue
 
         match = row.get("match", "")
         if not isinstance(match, str):
-            #print("match не строка")
             continue
 
         name = match.strip().lower()

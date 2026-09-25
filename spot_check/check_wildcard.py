@@ -2,7 +2,7 @@ import sys
 
 sys.path.insert(0, "src")
 
-from subdomain_enum.wildcard import detect_wildcard
+from subdomain_enum.application.wildcard import detect_wildcard
 
 # github.com — как мы видели, возможно, есть wildcard на GitHub Pages
 print("github.com:", detect_wildcard("github.com"))

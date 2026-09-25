@@ -2,7 +2,7 @@ import sys
 
 sys.path.insert(0, "src")
 
-from subdomain_enum.dns import resolve_domain
+from subdomain_enum.infrastructure.dns import resolve_domain
 
 print("github.com:", resolve_domain("github.com"))
 

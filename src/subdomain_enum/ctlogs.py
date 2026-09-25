@@ -16,17 +16,17 @@ def fetch_subdomains(domain: str, timeout: float = 10.0) -> list[str]:
     try: 
         with urllib.request.urlopen(request, timeout=timeout) as response:
             raw = response.read().decode("utf-8")
-            print("запрос отправлен")
+            #print("Raw: ", raw)
 
     except (urllib.error.URLError, TimeoutError, OSError) as e:
-        print(e)
+        #print(e)
         return []
 
     try:
         data = json.loads(raw)
-        print("парсится")
+        #print("парсится")
     except json.JSONDecodeError as e:
-        print(e)
+        #print(e)
         return []
 
     if not isinstance(data, dict):
@@ -40,12 +40,12 @@ def fetch_subdomains(domain: str, timeout: float = 10.0) -> list[str]:
 
     for row in rows:
         if not isinstance(row, dict):
-            print("row не словарь")
+            #print("row не словарь")
             continue
 
         match = row.get("match", "")
         if not isinstance(match, str):
-            print("match не строка")
+            #print("match не строка")
             continue
 
         name = match.strip().lower()

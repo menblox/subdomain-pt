@@ -11,7 +11,7 @@ from subdomain_enum.application.bruteforce import bruteforce, load_wordlist
 class TestBruteforce(unittest.TestCase):
     @patch("subdomain_enum.application.bruteforce.resolve_domain")
     def test_simple(self, mock_resolve):
-        #Простейший случай: 3 слова, все резолвятся
+        # Простейший случай: 3 слова, все резолвятся
         mock_resolve.side_effect = [
             ["1.1.1.1"],
             ["2.2.2.2"],
@@ -20,15 +20,18 @@ class TestBruteforce(unittest.TestCase):
 
         result = bruteforce("example.com", ["www", "mail", "api"])
 
-        self.assertEqual(result, [
-            ("www.example.com", ["1.1.1.1"]),
-            ("mail.example.com", ["2.2.2.2"]),
-            ("api.example.com", ["3.3.3.3"]),
-        ])
+        self.assertEqual(
+            result,
+            [
+                ("www.example.com", ["1.1.1.1"]),
+                ("mail.example.com", ["2.2.2.2"]),
+                ("api.example.com", ["3.3.3.3"]),
+            ],
+        )
 
     @patch("subdomain_enum.application.bruteforce.resolve_domain")
     def test_full_names(self, mock_resolve):
-        #Полные имена формируются как word.domain
+        # Полные имена формируются как word.domain
         mock_resolve.return_value = None
 
         bruteforce("example.com", ["www", "api"])
@@ -38,7 +41,7 @@ class TestBruteforce(unittest.TestCase):
 
     @patch("subdomain_enum.application.bruteforce.resolve_domain")
     def test_not_resolve(self, mock_resolve):
-        #Часть слов не резолвится их ip = None
+        # Часть слов не резолвится их ip = None
         mock_resolve.side_effect = [
             ["1.1.1.1"],
             None,
@@ -47,15 +50,18 @@ class TestBruteforce(unittest.TestCase):
 
         result = bruteforce("example.com", ["www", "mail", "api"])
 
-        self.assertEqual(result, [
-            ("www.example.com", ["1.1.1.1"]),
-            ("mail.example.com", None),
-            ("api.example.com", ["3.3.3.3"]),
-        ])
+        self.assertEqual(
+            result,
+            [
+                ("www.example.com", ["1.1.1.1"]),
+                ("mail.example.com", None),
+                ("api.example.com", ["3.3.3.3"]),
+            ],
+        )
 
     @patch("subdomain_enum.application.bruteforce.resolve_domain")
     def test_empty_words(self, mock_resolve):
-        #Пустой список слов, пустой результат
+        # Пустой список слов, пустой результат
         result = bruteforce("example.com", [])
 
         self.assertEqual(result, [])
@@ -63,7 +69,7 @@ class TestBruteforce(unittest.TestCase):
 
     @patch("subdomain_enum.application.bruteforce.resolve_domain")
     def test_order_preserved(self, mock_resolve):
-        #Порядок сохраняется, даже если резолв медленный
+        # Порядок сохраняется, даже если резолв медленный
         mock_resolve.return_value = ["1.1.1.1"]
 
         result = bruteforce("example.com", ["c", "a", "b"])
@@ -73,7 +79,7 @@ class TestBruteforce(unittest.TestCase):
 
     @patch("subdomain_enum.application.bruteforce.resolve_domain")
     def test_timeout_passed(self, mock_resolve):
-        #Параметр timeout доходит до resolve_domain
+        # Параметр timeout доходит до resolve_domain
         mock_resolve.return_value = None
 
         bruteforce("example.com", ["www"], timeout=5.0)
@@ -83,7 +89,7 @@ class TestBruteforce(unittest.TestCase):
 
     @patch("subdomain_enum.application.bruteforce.resolve_domain")
     def test_many_words(self, mock_resolve):
-        #Работает с большим количеством слов
+        # Работает с большим количеством слов
         mock_resolve.return_value = ["1.1.1.1"]
 
         words = [f"sub{i}" for i in range(100)]
@@ -93,10 +99,10 @@ class TestBruteforce(unittest.TestCase):
         self.assertEqual(result[0][0], "sub0.example.com")
         self.assertEqual(result[-1][0], "sub99.example.com")
 
-class TestLoadWordlist(unittest.TestCase):
 
+class TestLoadWordlist(unittest.TestCase):
     def _write_temp(self, content: str) -> str:
-        #Вспомогательный метод: пишет content во временный файл, возвращает путь
+        # Вспомогательный метод: пишет content во временный файл, возвращает путь
         tmp = tempfile.NamedTemporaryFile(
             mode="w",
             encoding="utf-8",
@@ -109,44 +115,45 @@ class TestLoadWordlist(unittest.TestCase):
         return tmp.name
 
     def test_simple(self):
-        #Обычный файл слова возвращаются в порядке появления
+        # Обычный файл слова возвращаются в порядке появления
         path = self._write_temp("www\nmail\napi\n")
         self.assertEqual(load_wordlist(path), ["www", "mail", "api"])
 
     def test_skips_empty_lines(self):
-        #Пустые строки пропускаются
+        # Пустые строки пропускаются
         path = self._write_temp("www\n\n\nmail\n\n")
         self.assertEqual(load_wordlist(path), ["www", "mail"])
 
     def test_skips_comments(self):
-        #Строки, начинающиеся с #, пропускаются
+        # Строки, начинающиеся с #, пропускаются
         path = self._write_temp("# comment\nwww\n# another\nmail\n")
         self.assertEqual(load_wordlist(path), ["www", "mail"])
 
     def test_strips_whitespace(self):
-        #Пробелы и \\n убираются с концов строк
+        # Пробелы и \\n убираются с концов строк
         path = self._write_temp("  www  \n\tmail\t\n")
         self.assertEqual(load_wordlist(path), ["www", "mail"])
 
     def test_empty_file(self):
-        #Пустой файл пустой список
+        # Пустой файл пустой список
         path = self._write_temp("")
         self.assertEqual(load_wordlist(path), [])
 
     def test_only_comments_and_empty(self):
-        #Только комментарии и пустые строки пустой список
+        # Только комментарии и пустые строки пустой список
         path = self._write_temp("# c1\n\n# c2\n\n")
         self.assertEqual(load_wordlist(path), [])
 
     def test_utf8(self):
-        #Кириллица читается корректно
+        # Кириллица читается корректно
         path = self._write_temp("тест\nпример\n")
         self.assertEqual(load_wordlist(path), ["тест", "пример"])
 
     def test_file_not_found(self):
-        #Несуществующий файл FileNotFoundError
+        # Несуществующий файл FileNotFoundError
         with self.assertRaises(FileNotFoundError):
             load_wordlist("/this/path/definitely/does/not/exist.txt")
+
 
 if __name__ == "__main__":
     unittest.main()

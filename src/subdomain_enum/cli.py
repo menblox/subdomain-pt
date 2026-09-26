@@ -13,62 +13,43 @@ from subdomain_enum.presentation.present import format_json, format_text, save_i
 
 logger = logging.getLogger(__name__)
 
+
 def _setup_logging(level: str) -> None:
-    #Настройки logging
+    # Настройки logging
     numeric_level = getattr(logging, level.upper(), logging.WARNING)
     logging.basicConfig(
         level=numeric_level,
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-        stream=sys.stderr
+        stream=sys.stderr,
     )
 
+
 def _add_common_args(parser: argparse.ArgumentParser) -> None:
-    #Добавляет общие аргументы, которые есть у всех subcommands
+    # Добавляет общие аргументы, которые есть у всех subcommands
+    parser.add_argument("domain", help="Целевой домен")
     parser.add_argument(
-        "domain",
-        help="Целевой домен"
+        "-t", "--timeout", type=float, default=2.0, help="Таймаут DNS-запроса в секундах"
     )
-    parser.add_argument(
-        "-t", "--timeout",
-        type=float,
-        default=2.0,
-        help="Таймаут DNS-запроса в секундах"
-    )
-    parser.add_argument(
-        "--workers",
-        type=int,
-        default=30,
-        help="Количество параллельных потоков"
-    )
-    parser.add_argument(
-        "--json",
-        action="store_true",
-        help="Вывод результата в JSON"
-    )
-    parser.add_argument(
-        "--output",
-        default=None,
-        help="Сохранить результат в файл"
-    )
+    parser.add_argument("--workers", type=int, default=30, help="Количество параллельных потоков")
+    parser.add_argument("--json", action="store_true", help="Вывод результата в JSON")
+    parser.add_argument("--output", default=None, help="Сохранить результат в файл")
     parser.add_argument(
         "--log-level",
         default="WARNING",
         choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
-        help="Уровень логирования"
+        help="Уровень логирования",
     )
     parser.add_argument(
-        "--log-file",
-        default=None,
-        help="Файл для записи логов (по умолчанию: stderr)"
+        "--log-file", default=None, help="Файл для записи логов (по умолчанию: stderr)"
     )
 
+
 def _add_wordlist_arg(parser: argparse.ArgumentParser) -> None:
-    #Добавляет аргумент --wordlist
+    # Добавляет аргумент --wordlist
     parser.add_argument(
-        "-w", "--wordlist",
-        default="wordlists/subdomains-5000.txt",
-        help="Путь к файлу словарю"
+        "-w", "--wordlist", default="wordlists/subdomains-5000.txt", help="Путь к файлу словарю"
     )
+
 
 def _setup_logging(level: str, log_file: str | None = None) -> None:
     handlers: list[logging.Handler] = []
@@ -84,11 +65,11 @@ def _setup_logging(level: str, log_file: str | None = None) -> None:
         handlers=handlers,
     )
 
+
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    #Парсит аргументы командной строки
+    # Парсит аргументы командной строки
     parser = argparse.ArgumentParser(
-        prog="subdomain_pt",
-        description="CLI утилита для поиска поддоменов"
+        prog="subdomain_pt", description="CLI утилита для поиска поддоменов"
     )
 
     subparser = parser.add_subparsers(dest="command", required=True)
@@ -96,28 +77,19 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     # ==================================
     # crt: глобальные CT логи
     # ==================================
-    ctr_parser = subparser.add_parser(
-        "crt",
-        help="Поиск через глобальные CT логи"
-    )
+    ctr_parser = subparser.add_parser("crt", help="Поиск через глобальные CT логи")
     _add_common_args(ctr_parser)
 
     # ==================================
     # crt-ru: РФ CT логи
     # ==================================
-    crt_ru_parser = subparser.add_parser(
-        "crt-ru",
-        help="Поиск через российские CT логи"
-    )
+    crt_ru_parser = subparser.add_parser("crt-ru", help="Поиск через российские CT логи")
     _add_common_args(crt_ru_parser)
 
     # ==================================
     # brute: брутфорс по словарю
     # ==================================
-    brute_parser = subparser.add_parser(
-        "brute",
-        help="Брутфорс по словарю"
-    )
+    brute_parser = subparser.add_parser("brute", help="Брутфорс по словарю")
     _add_common_args(brute_parser)
     _add_wordlist_arg(brute_parser)
 
@@ -125,16 +97,16 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     # unif все источники
     # ==================================
     unif_parser = subparser.add_parser(
-        "unif",
-        help="Все источники: глобальные + российские CT + брутфорс"
+        "unif", help="Все источники: глобальные + российские CT + брутфорс"
     )
     _add_common_args(unif_parser)
     _add_wordlist_arg(unif_parser)
 
     return parser.parse_args(argv)
 
+
 def _collect_names(args: argparse.Namespace) -> list[str]:
-    #Собирает имена из выбранных источников
+    # Собирает имена из выбранных источников
     names: set[str] = set()
 
     if args.command in ("crt", "unif"):
@@ -184,10 +156,7 @@ def main(argv: list[str] | None = None) -> int:
 
     logger.info("Резолв %d имён...", len(names))
     results = unification_names(
-        names,
-        timeout=args.timeout,
-        max_workers=args.workers,
-        wildcard_ip=wildcard_ip
+        names, timeout=args.timeout, max_workers=args.workers, wildcard_ip=wildcard_ip
     )
 
     output = format_json(results) if args.json else format_text(results)

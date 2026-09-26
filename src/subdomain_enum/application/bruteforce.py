@@ -6,8 +6,8 @@ from functools import partial
 from subdomain_enum.infrastructure.dns import resolve_domain
 
 
-def load_wordlist(path:str) -> list[str]:
-    #Читает файл-словарь и возвращает список слов
+def load_wordlist(path: str) -> list[str]:
+    # Читает файл-словарь и возвращает список слов
     words: list[str] = []
     with open(path, encoding="utf-8") as f:
         for line in f:
@@ -18,13 +18,11 @@ def load_wordlist(path:str) -> list[str]:
 
     return words
 
+
 def bruteforce(
-        domain: str, 
-        words: list[str], 
-        timeout: float = 2.0, 
-        max_workers: int = 30
-    ) -> list[tuple[str, list[str] | None]]:
-    #Перебирает слова из списка, формируя поддомены
+    domain: str, words: list[str], timeout: float = 2.0, max_workers: int = 30
+) -> list[tuple[str, list[str] | None]]:
+    # Перебирает слова из списка, формируя поддомены
 
     if not words:
         return []

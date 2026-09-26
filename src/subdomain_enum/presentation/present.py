@@ -4,7 +4,7 @@ import json
 
 
 def format_text(results: list[tuple[str, list[str] | None]]) -> str:
-    #форматирует результаты в текстовый вид
+    # форматирует результаты в текстовый вид
     lines: list[str] = []
 
     for name, ip in results:
@@ -15,19 +15,18 @@ def format_text(results: list[tuple[str, list[str] | None]]) -> str:
 
     return "\n".join(lines)
 
+
 def format_json(results: list[tuple[str, list[str] | None]]) -> str:
-    #Форматирует результаты в JSON
+    # Форматирует результаты в JSON
     data = []
 
     for name, ip in results:
-        data.append({
-            "name": name,
-            "ip": ip if ip else []
-        })
+        data.append({"name": name, "ip": ip if ip else []})
 
     return json.dumps(data, indent=2, ensure_ascii=False)
 
+
 def save_in_file(content: str, path: str) -> None:
-    #Сохраняет строку в файл
+    # Сохраняет строку в файл
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)

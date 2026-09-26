@@ -9,6 +9,7 @@ CTRSH_URL = "https://ct.tlscc.ru/?q={domain}&output=json"
 
 context = ssl._create_unverified_context()
 
+
 def fetch_subdomains_ru(domain: str, timeout: float = 10.0) -> list[str]:
 
     url = CTRSH_URL.format(domain=domain)
@@ -17,11 +18,10 @@ def fetch_subdomains_ru(domain: str, timeout: float = 10.0) -> list[str]:
     try:
         with urllib.request.urlopen(request, timeout=timeout, context=context) as response:
             raw = response.read().decode("utf-8")
-            #print("raw: ", raw)
+            # print("raw: ", raw)
     except (urllib.error.URLError, TimeoutError, OSError) as e:
         print("ошибка: ", e)
-        return[]
-
+        return []
 
     try:
         data = json.loads(raw)
@@ -55,7 +55,7 @@ def fetch_subdomains_ru(domain: str, timeout: float = 10.0) -> list[str]:
                 continue
 
             if name.startswith("*."):
-                name=name[2:]
+                name = name[2:]
 
             if name == domain or name.endswith("." + domain):
                 names.add(name)

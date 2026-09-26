@@ -9,7 +9,7 @@ from subdomain_enum.application.wildcard import detect_wildcard
 class TestDetectWildcard(unittest.TestCase):
     @patch("subdomain_enum.application.wildcard.resolve_domain")
     def test_wildcard_detected(self, mock_resolve):
-        #Все три случайных имени резолвятся в один IP wildcard
+        # Все три случайных имени резолвятся в один IP wildcard
         mock_resolve.return_value = ["213.180.204.242"]
 
         result = detect_wildcard("yandex.ru")
@@ -19,7 +19,7 @@ class TestDetectWildcard(unittest.TestCase):
 
     @patch("subdomain_enum.application.wildcard.resolve_domain")
     def test_no_wildcard(self, mock_resolve):
-        #Все три имени не резолвятся wildcard нет
+        # Все три имени не резолвятся wildcard нет
         mock_resolve.return_value = None
 
         result = detect_wildcard("github.com")
@@ -29,7 +29,7 @@ class TestDetectWildcard(unittest.TestCase):
 
     @patch("subdomain_enum.application.wildcard.resolve_domain")
     def test_different_ip_no_wildcard(self, mock_resolve):
-        #Имена резолвятся в разные IP это не wildcard
+        # Имена резолвятся в разные IP это не wildcard
         mock_resolve.side_effect = [
             ["1.1.1.1"],
             ["2.2.2.2"],
@@ -42,7 +42,7 @@ class TestDetectWildcard(unittest.TestCase):
 
     @patch("subdomain_enum.application.wildcard.resolve_domain")
     def test_partial_resolve_no_wildcard(self, mock_resolve):
-        #Одно имя не резолвится wildcard нет
+        # Одно имя не резолвится wildcard нет
         mock_resolve.side_effect = [
             ["1.1.1.1"],
             None,
@@ -55,7 +55,7 @@ class TestDetectWildcard(unittest.TestCase):
 
     @patch("subdomain_enum.application.wildcard.resolve_domain")
     def test_multiple_ip(self, mock_resolve):
-        #Wildcard может вернуть несколько IP все должны совпасть
+        # Wildcard может вернуть несколько IP все должны совпасть
         mock_resolve.return_value = ["1.1.1.1", "2.2.2.2"]
 
         result = detect_wildcard("github.com")
@@ -64,7 +64,7 @@ class TestDetectWildcard(unittest.TestCase):
 
     @patch("subdomain_enum.application.wildcard.resolve_domain")
     def test_order_ip(self, mock_resolve):
-        #Порядок IP не важен сравниваем множества
+        # Порядок IP не важен сравниваем множества
         mock_resolve.side_effect = [
             ["1.1.1.1", "2.2.2.2"],
             ["2.2.2.2", "1.1.1.1"],
@@ -77,7 +77,7 @@ class TestDetectWildcard(unittest.TestCase):
 
     @patch("subdomain_enum.application.wildcard.resolve_domain")
     def test_custom_quantity(self, mock_resolve):
-        #Можно задать количество проб
+        # Можно задать количество проб
         mock_resolve.return_value = ["1.1.1.1"]
 
         result = detect_wildcard("github.com", quantity=5)
@@ -87,7 +87,7 @@ class TestDetectWildcard(unittest.TestCase):
 
     @patch("subdomain_enum.application.wildcard.resolve_domain")
     def test_random_names(self, mock_resolve):
-        #Каждый вызов использует новое случайное имя
+        # Каждый вызов использует новое случайное имя
         mock_resolve.return_value = ["1.1.1.1"]
 
         detect_wildcard("github.com", quantity=3)
@@ -101,6 +101,7 @@ class TestDetectWildcard(unittest.TestCase):
         # Все имена должны оканчиваться на .github.com
         for name in called_names:
             self.assertTrue(name.endswith(".github.com"))
+
 
 if __name__ == "__main__":
     unittest.main()

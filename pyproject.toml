@@ -1,7 +1,12 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "subdomain-pt"
 version = "0.1.0"
 description = "CLI  утилита  для  поиска  поддоменов"
+readme = "README.md"
 requires-python = ">=3.14"
 dependencies = []
 
@@ -10,9 +15,16 @@ dev = [
     "ruff>=0.16.0",
 ]
 
+[project.scripts]
+subdomain-enum = "subdomain_enum.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
 [tool.ruff]
 line-length = 100
 target-version = "py314"
+exclude = [".venv", "__pycache__", ".ruff_cache"]
 
 [tool.ruff.lint]
 select = [

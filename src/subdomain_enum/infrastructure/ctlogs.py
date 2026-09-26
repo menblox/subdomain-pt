@@ -6,18 +6,19 @@ import urllib.request
 
 CTRSH_URL = "https://api.ctlogs.dev/v1/subdomains/{domain}"
 
+
 def fetch_subdomains(domain: str, timeout: float = 10.0) -> list[str]:
-    #Запрашивает crt.sh и возвращает список уникальных поддоменов
+    # Запрашивает crt.sh и возвращает список уникальных поддоменов
 
     url = CTRSH_URL.format(domain=domain)
     print(url)
     request = urllib.request.Request(url, headers={"User-Agent": "subdomain-enum/0.1"})
 
-    try: 
+    try:
         with urllib.request.urlopen(request, timeout=timeout) as response:
             raw = response.read().decode("utf-8")
 
-    except (urllib.error.URLError, TimeoutError, OSError):
+    except urllib.error.URLError, TimeoutError, OSError:
         return []
 
     try:
@@ -31,7 +32,7 @@ def fetch_subdomains(domain: str, timeout: float = 10.0) -> list[str]:
     rows = data.get("rows", [])
     if not isinstance(rows, list):
         return []
-    
+
     names: set[str] = set()
 
     for row in rows:
@@ -48,7 +49,7 @@ def fetch_subdomains(domain: str, timeout: float = 10.0) -> list[str]:
             continue
 
         if name.startswith("*."):
-            name=name[2:]
+            name = name[2:]
 
         if name == domain or name.endswith("." + domain):
             names.add(name)

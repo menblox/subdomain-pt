@@ -9,7 +9,7 @@ from subdomain_enum.cli import parse_args
 
 
 class TestParseArgsCommands(TestCase):
-    #Парсинг subcommands
+    # Парсинг subcommands
 
     def test_crt_command(self):
         args = parse_args(["crt", "example.com"])
@@ -32,26 +32,26 @@ class TestParseArgsCommands(TestCase):
         self.assertEqual(args.domain, "example.com")
 
     def test_unknown_command(self):
-        #Неизвестная команда SystemExit
+        # Неизвестная команда SystemExit
         with self.assertRaises(SystemExit):
             with redirect_stderr(io.StringIO()):
                 parse_args(["unknown", "example.com"])
 
     def test_no_command(self):
-        #Без команды SystemExit
+        # Без команды SystemExit
         with self.assertRaises(SystemExit):
             with redirect_stderr(io.StringIO()):
                 parse_args([])
 
     def test_no_domain(self):
-        #Команда без домена SystemExit
+        # Команда без домена SystemExit
         with self.assertRaises(SystemExit):
             with redirect_stderr(io.StringIO()):
                 parse_args(["crt"])
 
 
 class TestParseArgsDefaults(TestCase):
-    #Значения по умолчанию для общих аргументов
+    # Значения по умолчанию для общих аргументов
 
     def test_timeout_default(self):
         args = parse_args(["crt", "example.com"])
@@ -79,7 +79,7 @@ class TestParseArgsDefaults(TestCase):
 
 
 class TestParseArgsFlags(TestCase):
-    #Парсинг флагов
+    # Парсинг флагов
 
     def test_timeout_custom(self):
         args = parse_args(["crt", "example.com", "--timeout", "5.5"])
@@ -110,7 +110,7 @@ class TestParseArgsFlags(TestCase):
         self.assertEqual(args.log_level, "DEBUG")
 
     def test_log_level_invalid(self):
-        #Неверный уровень SystemExit
+        # Неверный уровень SystemExit
         with self.assertRaises(SystemExit):
             with redirect_stderr(io.StringIO()):
                 parse_args(["crt", "example.com", "--log-level", "VERBOSE"])
@@ -120,15 +120,23 @@ class TestParseArgsFlags(TestCase):
         self.assertEqual(args.log_file, "app.log")
 
     def test_combined_flags(self):
-        args = parse_args([
-            "crt", "example.com",
-            "--timeout", "3.0",
-            "--workers", "20",
-            "--json",
-            "--output", "out.json",
-            "--log-level", "INFO",
-            "--log-file", "app.log",
-        ])
+        args = parse_args(
+            [
+                "crt",
+                "example.com",
+                "--timeout",
+                "3.0",
+                "--workers",
+                "20",
+                "--json",
+                "--output",
+                "out.json",
+                "--log-level",
+                "INFO",
+                "--log-file",
+                "app.log",
+            ]
+        )
         self.assertEqual(args.timeout, 3.0)
         self.assertEqual(args.workers, 20)
         self.assertTrue(args.json)
@@ -138,7 +146,7 @@ class TestParseArgsFlags(TestCase):
 
 
 class TestParseArgsWordlist(TestCase):
-    #Парсинг --wordlist для brute и unif
+    # Парсинг --wordlist для brute и unif
 
     def test_brute_has_wordlist(self):
         args = parse_args(["brute", "example.com"])
@@ -161,7 +169,7 @@ class TestParseArgsWordlist(TestCase):
         self.assertEqual(args.wordlist, "custom.txt")
 
     def test_crt_no_wordlist_attribute(self):
-        #У команды crt нет атрибута wordlist
+        # У команды crt нет атрибута wordlist
         args = parse_args(["crt", "example.com"])
         # wordlist не определён для crt, поэтому обращение к нему AttributeError
         self.assertFalse(hasattr(args, "wordlist"))
@@ -172,7 +180,7 @@ class TestParseArgsWordlist(TestCase):
 
 
 class TestParseArgsHelp(TestCase):
-    #--help работает для всех команд
+    # --help работает для всех команд
 
     def test_help_top_level(self):
         with self.assertRaises(SystemExit):

@@ -20,15 +20,13 @@ class TestFormatText(unittest.TestCase):
         self.assertEqual(text, "api.example.com\tN/A")
 
     def test_multiple(self):
-        result = [
-            ("www.example.com", ["1.2.3.4"]),
-            ("api.example.com", None)
-        ]
+        result = [("www.example.com", ["1.2.3.4"]), ("api.example.com", None)]
         text = format_text(result)
         self.assertEqual(text, "www.example.com\t1.2.3.4\napi.example.com\tN/A")
 
     def test_none(self):
         self.assertEqual(format_text([]), "")
+
 
 class TestFormatJson(unittest.TestCase):
     def test_ip(self):
@@ -52,6 +50,7 @@ class TestFormatJson(unittest.TestCase):
         result = [("www.example.com", ["1.2.3.4"])]
         text = format_json(result)
         json.loads(text)
+
 
 class TestSaveInFile(unittest.TestCase):
     def test_save(self):

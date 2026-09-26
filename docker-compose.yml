@@ -1,0 +1,11 @@
+services:
+  subdomain-enum:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: subdomain-enum:latest
+    container_name: subdomain-enum
+    volumes:
+      - ./wordlists:/app/wordlists:ro
+      - ./results:/app/results
+    command: ["--help"]
